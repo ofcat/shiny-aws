@@ -26,14 +26,16 @@ export class ShinyAwsStack extends Stack {
     });
 
     const taskDefinition = new ecs.FargateTaskDefinition(this, 'TaskDefinition', {
-      cpu: 512,
+      cpu: 512, //adjust for smaller tasks while testing
       memoryLimitMiB: 1024,
     });
     
     const port = 3838
     
     const container = taskDefinition.addContainer('Container', {
-      image: ecs.ContainerImage.fromRegistry('rocker/shiny'),
+     // image: ecs.ContainerImage.fromRegistry('rocker/shiny'),
+     //figure out ci/cd 
+      image: ecs.ContainerImage.fromAsset('03-docker-basic'),
       portMappings: [{ containerPort: port }],
     })
     
