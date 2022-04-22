@@ -5,6 +5,7 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as cdk from 'aws-cdk-lib'
+import * as ecr from 'aws-cdk-lib/aws-ecr'
 
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
@@ -31,11 +32,16 @@ export class ShinyAwsStack extends Stack {
     });
     
     const port = 3838
+    const repository =  ecr.Repository.fromRepositoryName(this, 'MyRepo',  'shiny-repo');
+
     
     const container = taskDefinition.addContainer('Container', {
+
      // image: ecs.ContainerImage.fromRegistry('rocker/shiny'),
      //figure out ci/cd 
-      image: ecs.ContainerImage.fromAsset('03-docker-basic'),
+     // image: ecs.ContainerImage.fromAsset('03-docker-basic'),
+
+     image: ecs.ContainerImage.fromEcrRepository(repository, 'latest'),
       portMappings: [{ containerPort: port }],
     })
     
